@@ -1,4 +1,4 @@
 oii-training
 ============
 
-Source code of solutions for cms.di.unipi.it, USACO Training gateway, etc problems.
+Source code of my solutions for cms.di.unipi.it, UVa Online Judge, etc. problems.
