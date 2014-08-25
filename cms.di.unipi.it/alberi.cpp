@@ -67,29 +67,3 @@ void visita(int N, int *PRE, int *POST, int *SIMM )
 
     return;
 }
-
-int main()
-{
-    ifstream in("input.txt");
-    ofstream out("output.txt");
-
-    int N;
-    int PRE[7], POST[7], SIMM[7];
-
-    in >> N;
-
-    for(int i = 0; i < N; i++)
-	in >> PRE[i];
-
-    for(int i = 0; i < N; i++)
-	in >> POST[i];
-
-    visita(N, PRE, POST, SIMM);
-
-    for(int i = 0; i < N; i++)
-        out << SIMM[i] << " ";
-    out << "\n";
-
-    return 0;
-}
-
