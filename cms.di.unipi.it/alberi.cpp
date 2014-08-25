@@ -4,28 +4,9 @@
 
 using namespace std;
 
-struct nodo
+void find_Tree(int sPre, int ePre, int sPost, int ePost, int *pre, int *post, int *simm, int &idx)
 {
-    int value;
-    nodo *left;
-    nodo *right;
-};
-
-nodo* newNode(int value)
-{
-    struct nodo* n = new(struct nodo);
-    n->value = value;
-    n->left = NULL;
-    n->right = NULL;
-
-    return(n);
-}
-
-nodo* find_Tree(int sPre, int ePre, int sPost, int ePost, int *pre, int *post)
-{
-
-    nodo *curr = newNode(pre[sPre]);
-    if(sPre == ePre) return curr;
+    if(sPre == ePre) { simm[idx++] = pre[sPre]; return; }
 
     if(pre[sPre+1] != post[sPost-1])
     {
@@ -35,35 +16,20 @@ nodo* find_Tree(int sPre, int ePre, int sPost, int ePost, int *pre, int *post)
         while(pre[newSPre] != post[sPost-1]) newSPre++;
         while(post[newSPost] != pre[sPre+1]) newSPost--;
 
-        curr->left = find_Tree(sPre+1, newSPre-1, newSPost, ePost, pre, post);
-        curr->right = find_Tree(newSPre, ePre, sPost-1, newSPost+1, pre, post);
+        find_Tree(sPre+1, newSPre-1, newSPost, ePost, pre, post, simm, idx);
+        simm[idx++] = pre[sPre];
+        find_Tree(newSPre, ePre, sPost-1, newSPost+1, pre, post, simm, idx);
     }
-    else    curr->left = find_Tree(sPre+1, ePre, sPost-1, ePost, pre, post);
-
-    return curr;
-}
-
-void print(nodo *n, queue<int> &q)
-{
-    if(n == NULL) return;
-    print(n->left, q);
-    q.push(n->value);
-    print(n->right, q);
+    else
+    {
+        find_Tree(sPre+1, ePre, sPost-1, ePost, pre, post, simm, idx);
+        simm[idx++] = pre[sPre];
+    }
 }
 
 void visita(int N, int *PRE, int *POST, int *SIMM )
 {
-    nodo *albero = find_Tree(0, N-1, N-1, 0, PRE, POST);
+    int idx = 0;
 
-    queue<int> q;
-
-    print(albero, q);
-    int i = 0;
-    while(!q.empty())
-    {
-        SIMM[i++] = q.front();
-        q.pop();
-    }
-
-    return;
+    find_Tree(0, N-1, N-1, 0, PRE, POST, SIMM, idx);
 }
