@@ -10,7 +10,7 @@ int contaOp = 0;
 
 struct trie
 {
-    bool ordina;
+    
     bool print;
     char c;
     vector<trie> sons;
@@ -41,7 +41,7 @@ void addWord(string w, trie &node)
         newNode.c = w[0];
         newNode.mWord = 0;
         newNode.print = false;
-		newNode.ordina = false;
+		newNode.sort = false;
         node.sons.push_back(newNode);
     }
     else i--;
@@ -63,7 +63,7 @@ void printSol(int &N, trie &nodo, ofstream &out)
     if(nodo.sons.empty())
 		return;
 
-    if(nodo.ordina) { nth_element(nodo.sons.begin(), nodo.sons.end()-1, nodo.sons.end()); nodo.sons.back().ordina = true; }
+    if(nodo.sort) { nth_element(nodo.sons.begin(), nodo.sons.end()-1, nodo.sons.end()); nodo.sons.back().sort = true; }
 
     int i = 0;
 
@@ -88,7 +88,7 @@ int main()
     trie triet;
     triet.c = '0';
     triet.print = false;
-	triet.ordina = true;
+	triet.sort = true;
     in >> N;
 
     for(int i = 0; i < N; i++)

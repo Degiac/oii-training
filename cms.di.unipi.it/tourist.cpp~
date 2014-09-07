@@ -16,7 +16,7 @@ int GreatestHappiness(int N, int K, int *H)
 		{
 			temp += H[i];
 			pq.push(H[i]);
-			happy = temp;
+			if(temp > happy) happy = temp;
 			continue;
 		}
 		if(pq.size() > K-i)
