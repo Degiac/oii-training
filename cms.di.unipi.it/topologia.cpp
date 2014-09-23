@@ -1,117 +1,106 @@
-#include <fstream>
+#include <cstdio>
+#include <cmath>
+#include <cstring>
 #include <vector>
-#include <list>
 #include <queue>
+#include <stack>
+#include <set>
+#include <map>
+#include <utility>
+#include <algorithm>
 
-#include <iostream>
+#define pb      push_back
+#define fi      first
+#define se      second
+#define mp      make_pair
+#define sz(a)   (int)a.size()
+
+#define EPS     1e-9
+#define INF     (int)1e9
+
+#define MAXN    100005
 
 using namespace std;
 
-vector<int> BFS(vector<list<int> > &grafo, vector<bool> &visited, int n)
+typedef long long       ll;
+typedef pair<int, int>  ii;
+typedef vector<int>     vi;
+typedef vector<ii>      vii;
+
+bool vis[MAXN];
+vi rete,graph[MAXN];
+
+void count(int i)
 {
-    queue<int> q;
-    vector<int> connections;
-    q.push(n);
+    queue<int> q; q.push(i);
+    rete.clear();
 
     while(!q.empty())
     {
-	int c = q.front();
-	q.pop();
-	if(!visited[c])
-	{
-	    visited[c] = true;
-
-	    connections.push_back((int)grafo[c].size());
-	    for(list<int>::iterator i = grafo[c].begin(); i != grafo[c].end(); i++)
-		q.push(*i);
-	}
+        int c = q.front(); q.pop();
+        if(!vis[c])
+        {
+            vis[c] = true;
+            rete.pb(sz(graph[c]));
+            for(int i = 0; i < sz(graph[c]); i++)
+                q.push(graph[c][i]);
+        }
     }
-
-    return connections;
 }
 
-bool isLineare(vector<int> &net)
+bool isLin()
 {
-    if(net.size() < 2) return false;
-
-    int uno = 0;
-
-    for(int i = 0; i < (int)net.size(); i++)
+    if(sz(rete) < 2) return false;
+    int c1 = 0; 
+    for(int i = 0; i < sz(rete); i++)
     {
-        if(net[i] == 1) uno++;
-        if(net[i] > 2 || uno > 2) return false;
+        if(rete[i] == 1) { c1++; continue; }
+        if(rete[i] != 2) return false;
     }
+    if(c1 != 2) return false;
+    return true;
 
-    if(uno == 2) return true;
-    else return false;
 }
 
-bool isAnello(vector<int> &net)
+bool isAne()
 {
-    if(net.size() < 3) return false;
-
-    for(int i = 0; i < (int)net.size(); i++)
-    {
-        if(net[i] != 2) return false;
-    }
-
+    if(sz(rete) < 3) return false;
+    for(int i = 0; i < sz(rete); i++)
+        if(rete[i] != 2) return false;
     return true;
 }
 
-bool isStella(vector<int> &net)
+bool isSte()
 {
-    if(net.size() < 4) return false;
-
-    bool foundCenter = false;
-
-    for(int i = 0; i < (int)net.size(); i++)
+    if(sz(rete) < 4) return false;
+    bool fcen = false;
+    for(int i = 0; i < sz(rete); i++)
     {
-        if(net[i] == 1) continue;
-        else if(foundCenter) return false;
-             else foundCenter = true;
+        if(rete[i] != 1)
+        {
+            if(fcen) return false;
+            fcen = true;
+        }
     }
-
     return true;
 }
 
-int main()
+void Analizza(int N, int M, int A[], int B[], int T[])
 {
-    ifstream in("input.txt");
-    ofstream out("output.txt");
-
-    int N, V;
-    int lin, ane, ste;
-    vector<list<int> > grafo;
-    vector<vector<int> > nets;
-    vector<bool> visited;
-
-    lin = ane = ste = 0;
-
-    in >> N >> V;
-
-    grafo.resize(N);
-    visited.resize(N);
-
-    int temp1, temp2;
-    for(int i = 0; i < V; i++)
+    for(int i = 0; i < M; i++)
     {
-        in >> temp1 >> temp2;
-        grafo[temp1-1].push_back(temp2-1);
-        grafo[temp2-1].push_back(temp1-1);
+        graph[A[i]].pb(B[i]);
+        graph[B[i]].pb(A[i]);
     }
 
-    for(int i = 0; i < N; i++)
-        if(!visited[i])
-            nets.push_back(BFS(grafo, visited, i));
+    T[0] = T[1] = T[2] = 0;
 
-    for(int i = 0; i < (int)nets.size(); i++)
-    {
-        if(isLineare(nets[i])) { lin++; continue; }
-        if(isAnello(nets[i])) { ane++; continue; }
-        if(isStella(nets[i])) { ste++; }
-    }
-
-    out << lin << " " << ane << " " << ste << "\n";
-
-    return 0;
+    for(int i = 1; i <= N; i++)
+        if(!vis[i])
+        {
+            count(i);
+            if(isLin()) { T[0]++; continue; }
+            if(isAne()) { T[1]++; continue; }
+            if(isSte()) T[2]++; 
+        }
 }
