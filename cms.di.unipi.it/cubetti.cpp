@@ -33,8 +33,8 @@ void Vernicia(int indice, int colore);
 
 void Diversifica(int N, int colore[])
 {
-    vii cubi;
-    for(int i = 0; i < N; i++) { col[colore[i]] = 1; cubi.pb(ii(colore[i], i)); }
+    vii cubi(N);
+    for(int i = 0; i < N; i++) { col[colore[i]] = 1; cubi[i] = ii(colore[i], i); }
     sort(cubi.begin(), cubi.end());
     
     int colIdx = 1;
